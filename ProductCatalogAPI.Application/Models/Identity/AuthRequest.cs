@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProductCatalogAPI.Domain.Entities;
+namespace ProductCatalogAPI.Application.Models.Identity;
 
-public class User : BaseEntity
+public class AuthRequest
 {
-    public string Username { get; set; } = string.Empty;
+    public string Email { get; set; } = string.Empty;
     public string Password { get; set; } = string.Empty;
 }
