@@ -1,90 +1,89 @@
 using FluentValidation;
-using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 using ProductCatalogAPI.Api.Models;
 using ProductCatalogAPI.Application.Exceptions;
-using System;
-using System.Collections.Generic;
 using System.Net;
-using System.Text.Json;
-using System.Threading.Tasks;
 
-namespace ProductCatalogAPI.Api.Middleware
+namespace ProductCatalogAPI.Api.Middleware;
+
+public class ExceptionHandlingMiddleware
 {
-    public class ExceptionHandlingMiddleware
+    private readonly RequestDelegate _next;
+    private readonly ILogger<ExceptionHandlingMiddleware> _logger;
+
+    public ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger)
     {
-        private readonly RequestDelegate _next;
+        _next = next;
+        this._logger = logger;
+    }
 
-        public ExceptionHandlingMiddleware(RequestDelegate next)
+    public async Task InvokeAsync(HttpContext context)
+    {
+        try
         {
-            _next = next;
+            await _next(context);
         }
-
-        public async Task InvokeAsync(HttpContext context)
+        catch (Exception ex)
         {
-            try
-            {
-                await _next(context);
-            }
-            catch (Exception ex)
-            {
-                await HandleExceptionAsync(context, ex);
-            }
+            await HandleExceptionAsync(context, ex);
         }
+    }
 
-        private static async Task HandleExceptionAsync(HttpContext context, Exception exception)
+    private async Task HandleExceptionAsync(HttpContext context, Exception exception)
+    {
+        HttpStatusCode statusCode = HttpStatusCode.InternalServerError;
+        CustomValidationProblemDetails problem = new();
+
+        switch (exception)
         {
-            HttpStatusCode statusCode = HttpStatusCode.InternalServerError;
-            CustomValidationProblemDetails problem = new();
-
-            switch (exception)
-            {
-                case ValidationException validationException:
-                    statusCode = HttpStatusCode.BadRequest;
-                    problem = new CustomValidationProblemDetails
+            case ValidationException validationException:
+                statusCode = HttpStatusCode.BadRequest;
+                problem = new CustomValidationProblemDetails
+                {
+                    Title = validationException.Message,
+                    Status = (int)statusCode,
+                    Detail = validationException.InnerException?.Message,
+                    Type = nameof(ValidationException),
+                    Errors = new Dictionary<string, string[]>
                     {
-                        Title = validationException.Message,
-                        Status = (int)statusCode,
-                        Detail = validationException.InnerException?.Message,
-                        Type = nameof(ValidationException),
-                        Errors = new Dictionary<string, string[]>
-                        {
-                            { "Errors", validationException.Errors.Select(e => e.ErrorMessage).ToArray() }
-                        }
-                    };
-                    break;
-                case BadRequestException badRequestException:
-                    statusCode = HttpStatusCode.BadRequest;
-                    problem = new CustomValidationProblemDetails
-                    {
-                        Title = badRequestException.Message,
-                        Status = (int)statusCode,
-                        Detail = badRequestException.InnerException?.Message,
-                        Type = nameof(BadRequestException),
-                        Errors = badRequestException.ValidationErrors
-                    };
-                    break;
-                case NotFoundException:
-                    statusCode = HttpStatusCode.NotFound;
-                    problem = new CustomValidationProblemDetails
-                    {
-                        Title = exception.Message,
-                        Status = (int)statusCode,
-                        Detail = exception.InnerException?.Message,
-                        Type = nameof(NotFoundException),
-                    };
-                    break;
-                default:
-                    problem = new CustomValidationProblemDetails
-                    {
-                        Title = exception.Message,
-                        Status = (int)statusCode,
-                        Detail = exception.StackTrace,
-                        Type = nameof(HttpStatusCode.InternalServerError),
-                    };
-                    break;
-            }
-            context.Response.StatusCode = (int)statusCode;
-            await context.Response.WriteAsJsonAsync(problem);
+                        { "Errors", validationException.Errors.Select(e => e.ErrorMessage).ToArray() }
+                    }
+                };
+                break;
+            case BadRequestException badRequestException:
+                statusCode = HttpStatusCode.BadRequest;
+                problem = new CustomValidationProblemDetails
+                {
+                    Title = badRequestException.Message,
+                    Status = (int)statusCode,
+                    Detail = badRequestException.InnerException?.Message,
+                    Type = nameof(BadRequestException),
+                    Errors = badRequestException.ValidationErrors
+                };
+                break;
+            case NotFoundException:
+                statusCode = HttpStatusCode.NotFound;
+                problem = new CustomValidationProblemDetails
+                {
+                    Title = exception.Message,
+                    Status = (int)statusCode,
+                    Detail = exception.InnerException?.Message,
+                    Type = nameof(NotFoundException),
+                };
+                break;
+            default:
+                problem = new CustomValidationProblemDetails
+                {
+                    Title = exception.Message,
+                    Status = (int)statusCode,
+                    Detail = exception.StackTrace,
+                    Type = nameof(HttpStatusCode.InternalServerError),
+                };
+                break;
         }
+        context.Response.StatusCode = (int)statusCode;
+        var logMessage = JsonConvert.SerializeObject(problem);
+        _logger.LogError(exception, logMessage);
+        await context.Response.WriteAsJsonAsync(problem);
     }
 }

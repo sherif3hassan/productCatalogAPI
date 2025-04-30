@@ -4,9 +4,14 @@ using ProductCatalogAPI.Infrastructure;
 using ProductCatalogAPI.Identity;
 using ProductCatalogAPI.Services;
 using Microsoft.OpenApi.Models;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Host.UseSerilog((context, configuration) => configuration
+    .WriteTo.Console()
+    .ReadFrom.Configuration(context.Configuration)
+    );
 // Add services to the container.
 builder.Services.AddApplicationServices();
 builder.Services.AddPersistenceServices(builder.Configuration);
