@@ -1,22 +1,18 @@
 ﻿using MediatR;
+using Microsoft.Extensions.Logging;
 using ProductCatalogAPI.Application.Contracts;
-using ProductCatalogAPI.Application.Contracts.Logging;
-using ProductCatalogAPI.Application.Exceptions;
 using ProductCatalogAPI.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ProductCatalogAPI.Application.BussinessLogic.Products.Commands.CreateProduct;
 
 public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, int>
 {
     private readonly IProductRepository _productRepository;
-    private readonly IAppLogger<CreateProductCommandHandler> _logger;
+    private readonly ILogger<CreateProductCommandHandler> _logger;
 
-    public CreateProductCommandHandler(IProductRepository productRepository, IAppLogger<CreateProductCommandHandler> logger)
+    public CreateProductCommandHandler(
+        IProductRepository productRepository,
+        ILogger<CreateProductCommandHandler> logger)
     {
         _productRepository = productRepository;
         _logger = logger;
@@ -24,6 +20,8 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
 
     public async Task<int> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
+        _logger.LogInformation("Creating new product with name: {ProductName}", request.Name);
+        
         var product = new Product
         {
             Name = request.Name,
@@ -34,6 +32,5 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
         await _productRepository.CreateAsync(product);
         _logger.LogInformation("Product created successfully with ID: {ProductId}", product.Id);
         return product.Id;
-
     }
 }

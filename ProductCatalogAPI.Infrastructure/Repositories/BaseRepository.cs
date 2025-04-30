@@ -2,11 +2,6 @@
 using ProductCatalogAPI.Application.Contracts;
 using ProductCatalogAPI.Domain.Entities;
 using ProductCatalogAPI.Infrastructure.DatabaseContext;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ProductCatalogAPI.Infrastructure.Repositories;
 
