@@ -10,7 +10,9 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
     private readonly IProductRepository _productRepository;
     private readonly ILogger<CreateProductCommandHandler> _logger;
 
-    public CreateProductCommandHandler(IProductRepository productRepository, ILogger<CreateProductCommandHandler> logger)
+    public CreateProductCommandHandler(
+        IProductRepository productRepository,
+        ILogger<CreateProductCommandHandler> logger)
     {
         _productRepository = productRepository;
         _logger = logger;
@@ -18,6 +20,8 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
 
     public async Task<int> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
+        _logger.LogInformation("Creating new product with name: {ProductName}", request.Name);
+        
         var product = new Product
         {
             Name = request.Name,
@@ -28,6 +32,5 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
         await _productRepository.CreateAsync(product);
         _logger.LogInformation("Product created successfully with ID: {ProductId}", product.Id);
         return product.Id;
-
     }
 }

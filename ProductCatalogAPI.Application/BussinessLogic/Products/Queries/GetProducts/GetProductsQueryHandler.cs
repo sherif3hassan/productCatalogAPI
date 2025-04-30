@@ -1,28 +1,30 @@
 ﻿using MediatR;
+using Microsoft.Extensions.Logging;
 using ProductCatalogAPI.Application.BussinessLogic.Products.DTOs;
 using ProductCatalogAPI.Application.Contracts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ProductCatalogAPI.Application.BussinessLogic.Products.Queries.GetProducts;
 
 public class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, List<ProductDTO>>
 {
     private readonly IProductRepository _productRepository;
+    private readonly ILogger<GetProductsQueryHandler> _logger;
 
-    public GetProductsQueryHandler(IProductRepository productRepository)
+    public GetProductsQueryHandler(
+        IProductRepository productRepository,
+        ILogger<GetProductsQueryHandler> logger)
     {
-        this._productRepository = productRepository;
+        _productRepository = productRepository;
+        _logger = logger;
     }
     public async Task<List<ProductDTO>> Handle(GetProductsQuery request, CancellationToken cancellationToken)
     {
-        // Implementation of the query handler
+        _logger.LogInformation("Retrieving all products");
+
         var products = await _productRepository.GetAllAsync();
         var productDTOs = products.Select(p => new ProductDTO(p)).ToList();
-        //throw new NotImplementedException();
+
+        _logger.LogInformation("Retrieved {Count} products", productDTOs.Count);
         return productDTOs;
     }
 }

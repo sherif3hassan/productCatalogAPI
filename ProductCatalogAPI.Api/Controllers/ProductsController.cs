@@ -9,7 +9,6 @@ using ProductCatalogAPI.Application.BussinessLogic.Products.Queries.GetProductBy
 using ProductCatalogAPI.Application.BussinessLogic.Products.Queries.GetProducts;
 using System.Threading.Tasks;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace ProductCatalogAPI.Api.Controllers
 {
@@ -52,9 +51,10 @@ namespace ProductCatalogAPI.Api.Controllers
             return CreatedAtAction(nameof(Get), new { id = productId }, null);
         }
 
-        // PUT api/<ProductsController>/5
-        [HttpPut("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        // PUT api/<ProductsController>/
+  
+        [HttpPut]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> Put(UpdateProductCommand command)

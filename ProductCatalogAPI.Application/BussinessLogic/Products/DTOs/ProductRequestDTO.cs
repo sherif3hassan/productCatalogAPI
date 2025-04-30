@@ -7,7 +7,6 @@ public class ProductRequestDto
     public decimal Price { get; set; }
     public string ImageUrl { get; set; }
 
-    // Constructor for ProductRequestDto
     public ProductRequestDto(string name, string description, decimal price, string imageUrl)
     {
         Name = name;

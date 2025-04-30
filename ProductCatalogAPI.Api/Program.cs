@@ -1,9 +1,8 @@
+using Microsoft.OpenApi.Models;
 using ProductCatalogAPI.Api.Middleware;
 using ProductCatalogAPI.Application;
-using ProductCatalogAPI.Infrastructure;
 using ProductCatalogAPI.Identity;
-using ProductCatalogAPI.Services;
-using Microsoft.OpenApi.Models;
+using ProductCatalogAPI.Infrastructure;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
