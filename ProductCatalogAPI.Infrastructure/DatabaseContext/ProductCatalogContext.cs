@@ -1,20 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using ProductCatalogAPI.Domain.Entities;
 
 namespace ProductCatalogAPI.Infrastructure.DatabaseContext;
 
-public class ProductCatalogContext: DbContext
+public class ProductCatalogContext : DbContext
 {
     public ProductCatalogContext(DbContextOptions<ProductCatalogContext> options) : base(options)
     {
     }
     public DbSet<Product> Products { get; set; }
-    public DbSet<User> Users { get; set; }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {

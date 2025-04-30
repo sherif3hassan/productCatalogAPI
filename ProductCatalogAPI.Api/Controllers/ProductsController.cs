@@ -28,7 +28,7 @@ namespace ProductCatalogAPI.Api.Controllers
         public async Task<IReadOnlyList<ProductDTO>> Get()
         {
             var products = await _mediator.Send(new GetProductsQuery());
-         
+
             return products;
         }
 

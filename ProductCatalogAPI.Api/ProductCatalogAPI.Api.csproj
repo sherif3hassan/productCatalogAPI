@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ProductCatalogAPI.Application\ProductCatalogAPI.Application.csproj" />
+    <ProjectReference Include="..\ProductCatalogAPI.Identity\ProductCatalogAPI.Identity.csproj" />
     <ProjectReference Include="..\ProductCatalogAPI.Infrastructure\ProductCatalogAPI.Infrastructure.csproj" />
   </ItemGroup>
 

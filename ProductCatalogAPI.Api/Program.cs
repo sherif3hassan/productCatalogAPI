@@ -1,13 +1,15 @@
+using ProductCatalogAPI.Api.Middleware;
 using ProductCatalogAPI.Application;
 using ProductCatalogAPI.Infrastructure;
+using ProductCatalogAPI.Identity;
 using ProductCatalogAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddApplicationServices();
-builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddPersistenceServices(builder.Configuration);
+builder.Services.AddIdentityServices(builder.Configuration);
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -33,8 +35,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+
 app.UseHttpsRedirection();
 
+// Add authentication middleware
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ProductCatalogAPI.Application.BussinessLogic.Products.Commands.CreateProduct;
 
-public class CreateProductCommandValidator: AbstractValidator<CreateProductCommand>
+public class CreateProductCommandValidator : AbstractValidator<CreateProductCommand>
 {
     public CreateProductCommandValidator()
     {
