@@ -8,7 +8,7 @@ using ProductCatalogAPI.Domain.Entities;
 
 namespace ProductCatalogAPI.Infrastructure.DatabaseContext;
 
-public class ProductCatalogContext: DbContext
+public class ProductCatalogContext : DbContext
 {
     public ProductCatalogContext(DbContextOptions<ProductCatalogContext> options) : base(options)
     {

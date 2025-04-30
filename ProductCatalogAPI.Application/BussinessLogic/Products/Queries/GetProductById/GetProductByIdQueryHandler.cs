@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace ProductCatalogAPI.Application.BussinessLogic.Products.Queries.GetProductById;
 
-public class GetProductByIdQueryHandler: IRequestHandler<GetProductByIdQuery, ProductDTO>
+public class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, ProductDTO>
 {
     private readonly IProductRepository _productRepository;
     public GetProductByIdQueryHandler(IProductRepository productRepository)

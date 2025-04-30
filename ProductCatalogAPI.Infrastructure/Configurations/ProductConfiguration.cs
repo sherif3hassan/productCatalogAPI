@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ProductCatalogAPI.Infrastructure.Configurations;
 
-public class ProductConfiguration: IEntityTypeConfiguration<Product>
+public class ProductConfiguration : IEntityTypeConfiguration<Product>
 {
     public void Configure(EntityTypeBuilder<Product> builder)
     {

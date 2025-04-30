@@ -24,12 +24,6 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
 
     public async Task<int> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
-        var validator = new CreateProductCommandValidator();
-        var validationResult = await validator.ValidateAsync(request);
-        if (!validationResult.IsValid)
-        {
-            throw new BadRequestException("Product validation failed", validationResult);
-        }
         var product = new Product
         {
             Name = request.Name,

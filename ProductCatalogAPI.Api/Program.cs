@@ -1,3 +1,4 @@
+using ProductCatalogAPI.Api.Middleware;
 using ProductCatalogAPI.Application;
 using ProductCatalogAPI.Infrastructure;
 using ProductCatalogAPI.Services;
@@ -6,7 +7,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddApplicationServices();
-builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddPersistenceServices(builder.Configuration);
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
@@ -32,6 +32,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
 

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ProductCatalogAPI.Application.BussinessLogic.Products.Queries.GetProducts;
 
-public class GetProductsQueryHandler: IRequestHandler<GetProductsQuery, List<ProductDTO>>
+public class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, List<ProductDTO>>
 {
     private readonly IProductRepository _productRepository;
 
